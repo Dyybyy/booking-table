@@ -95,32 +95,41 @@
                            <input type="number" id="people" name="people" class="form-control" placeholder="How many people?" required>
                        </div>
                        <div class="form-group">
-                        <input type="date" id="date" name="date" class="form-control" placeholder="What is the date?" required>
-                    </div>
-                    
-                    <script>
-                        // Get current date in yyyy-mm-dd format
-                        var today = new Date().toISOString().slice(0, 10);
-                    
-                        // Set the input field value to current date
-                        document.getElementById('date').value = today;
-                    </script>
-                    
-                       <div class="form-group">
-                        <input type="time" id="time" name="time" class="form-control" placeholder="What time?" required>
-                    </div>
-                    
-                    <script>
-                        // Get current time
-                        var currentTime = new Date().toLocaleTimeString('en-US', { hour12: false });
-                    
-                        // Set the input field value to current time
-                        document.getElementById('time').value = currentTime;
-                    </script>
-                    
-                       <div class="form-group">
-                           <textarea id="message" name="message" class="form-control" placeholder="Write your message" required></textarea>
+                           <input type="date" id="date" name="date" class="form-control" placeholder="What is the date?" required>
                        </div>
+                       <div class="form-group">
+                        <input type="time" id="time" name="time" class="form-control" required>
+                    </div>
+                    
+                    <script>
+                        // Check if the browser supports the 'time' input type
+                        var isTimeInputSupported = function() {
+                            var input = document.createElement('input');
+                            input.setAttribute('type', 'time');
+                            return input.type === 'time';
+                        };
+                    
+                        // If 'time' input type is not supported, fallback to JavaScript placeholder
+                        if (!isTimeInputSupported()) {
+                            var timeInput = document.getElementById('time');
+                            timeInput.value = 'HH:MM'; // Default value as placeholder
+                            timeInput.addEventListener('focus', function() {
+                                if (timeInput.value === 'HH:MM') {
+                                    timeInput.value = '';
+                                }
+                            });
+                            timeInput.addEventListener('blur', function() {
+                                if (timeInput.value === '') {
+                                    timeInput.value = 'HH:MM';
+                                }
+                            });
+                        }
+                    </script>
+                    
+                       <div class="form-group">
+                        <textarea id="message" name="message" class="form-control" placeholder="Write your message" required></textarea>
+                    </div>
+                    
                    </div>
                    <input type="submit" value="Send Message" class="submit-button">
                </form>
