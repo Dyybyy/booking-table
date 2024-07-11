@@ -98,34 +98,8 @@
                            <input type="date" id="date" name="date" class="form-control" placeholder="What is the date?" required>
                        </div>
                        <div class="form-group">
-                        <input type="time" id="time" name="time" class="form-control" required>
-                    </div>
-                    
-                    <script>
-                        // Check if the browser supports the 'time' input type
-                        var isTimeInputSupported = function() {
-                            var input = document.createElement('input');
-                            input.setAttribute('type', 'time');
-                            return input.type === 'time';
-                        };
-                    
-                        // If 'time' input type is not supported, fallback to JavaScript placeholder
-                        if (!isTimeInputSupported()) {
-                            var timeInput = document.getElementById('time');
-                            timeInput.value = 'HH:MM'; // Default value as placeholder
-                            timeInput.addEventListener('focus', function() {
-                                if (timeInput.value === 'HH:MM') {
-                                    timeInput.value = '';
-                                }
-                            });
-                            timeInput.addEventListener('blur', function() {
-                                if (timeInput.value === '') {
-                                    timeInput.value = 'HH:MM';
-                                }
-                            });
-                        }
-                    </script>
-                    
+                           <input type="time" id="time" name="time" class="form-control" placeholder="What time?" required>
+                       </div>
                        <div class="form-group">
                         <textarea id="message" name="message" class="form-control" placeholder="Write your message" required></textarea>
                     </div>
@@ -147,77 +121,79 @@
 
    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
    <script>
-       document.addEventListener('DOMContentLoaded', function () {
-           emailjs.init("7BYzg_CUnCpuaxYDm");
+      document.addEventListener('DOMContentLoaded', function () {
+    emailjs.init("7BYzg_CUnCpuaxYDm");
 
-           document.getElementById('contact-form').addEventListener('submit', function (event) {
-               event.preventDefault(); // Prevent form from submitting normally
+    document.getElementById('contact-form').addEventListener('submit', function (event) {
+        event.preventDefault(); // Prevent form from submitting normally
 
-               const formData = {
-                   first_name: document.getElementById('first_name').value,
-                   last_name: document.getElementById('last_name').value,
-                   email: document.getElementById('email').value,
-                   phone: document.getElementById('phone').value,
-                   people: document.getElementById('people').value,
-                   date: document.getElementById('date').value,
-                   time: document.getElementById('time').value,
-                   message: document.getElementById('message').value
-               };
+        const formData = {
+            first_name: document.getElementById('first_name').value,
+            last_name: document.getElementById('last_name').value,
+            email: document.getElementById('email').value,
+            phone: document.getElementById('phone').value,
+            people: document.getElementById('people').value,
+            date: document.getElementById('date').value,
+            time: document.getElementById('time').value,
+            message: document.getElementById('message').value
+        };
 
-               // Save form data to localStorage
-               localStorage.setItem('contactFormData', JSON.stringify(formData));
+        // Save form data to localStorage
+        localStorage.setItem('contactFormData', JSON.stringify(formData));
 
-               const serviceID = 'service_yzf0i0q';
-               const templateID = 'template_91dte9w';
+        const serviceID = 'service_yzf0i0q';
+        const templateID = 'template_91dte9w';
 
-               emailjs.send(serviceID, templateID, formData)
-                   .then(function () {
-                       showSuccessModal();
-                       document.getElementById('contact-form').reset(); // Clear the form
-                   }, function (error) {
-                       console.error('Failed to send message:', error);
-                       alert('Failed to send message. Please try again.');
-                   });
-           });
+        emailjs.send(serviceID, templateID, formData)
+            .then(function () {
+                showSuccessModal();
+                document.getElementById('contact-form').reset(); // Clear the form
+            }, function (error) {
+                console.error('Failed to send message:', error);
+                alert('Failed to send message. Please try again.');
+            });
+    });
 
-           // Load saved data on page load
-           const savedData = JSON.parse(localStorage.getItem('contactFormData'));
-           if (savedData) {
-               document.getElementById('first_name').value = savedData.first_name || '';
-               document.getElementById('last_name').value = savedData.last_name || '';
-               document.getElementById('email').value = savedData.email || '';
-               document.getElementById('phone').value = savedData.phone || '';
-               document.getElementById('people').value = savedData.people || '';
-               document.getElementById('date').value = savedData.date || '';
-               document.getElementById('time').value = savedData.time || '';
-               document.getElementById('message').value = savedData.message || '';
-           }
+    // Load saved data on page load
+    const savedData = JSON.parse(localStorage.getItem('contactFormData'));
+    if (savedData) {
+        document.getElementById('first_name').value = savedData.first_name || '';
+        document.getElementById('last_name').value = savedData.last_name || '';
+        document.getElementById('email').value = savedData.email || '';
+        document.getElementById('phone').value = savedData.phone || '';
+        document.getElementById('people').value = savedData.people || '';
+        document.getElementById('date').value = savedData.date || '';
+        document.getElementById('time').value = savedData.time || '';
+        document.getElementById('message').value = savedData.message || '';
+    }
 
-           // Get the modal
-           const modal = document.getElementById("successModal");
+    // Clear localStorage on page refresh
+    window.addEventListener('beforeunload', function () {
+        localStorage.removeItem('contactFormData');
+    });
 
-           // Get the <span> element that closes the modal
-           const span = document.getElementsByClassName("close")[0];
+    // Modal functionality
+    const modal = document.getElementById("successModal");
+    const span = document.getElementsByClassName("close")[0];
 
-           // When the user clicks on <span> (x), close the modal
-           span.onclick = function () {
-               modal.style.display = "none";
-           }
+    span.onclick = function () {
+        modal.style.display = "none";
+    }
 
-           // When the user clicks anywhere outside of the modal, close it
-           window.onclick = function (event) {
-               if (event.target == modal) {
-                   modal.style.display = "none";
-               }
-           }
+    window.onclick = function (event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
 
-           function showSuccessModal() {
-               modal.style.display = "block";
-               setTimeout(() => {
-                   modal.style.display = "none";
-               }, 3000);
-           }
-       });
+    function showSuccessModal() {
+        modal.style.display = "block";
+        setTimeout(() => {
+            modal.style.display = "none";
+        }, 3000);
+    }
+});
+
    </script>
 </body>
 </html>
